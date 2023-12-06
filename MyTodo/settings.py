@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # added todo app to installed apps
     'Todo.apps.TodoConfig',
+    # added rest framwork app to installed apps
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
