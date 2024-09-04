@@ -17,13 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
-from Todo.views import TodoViewSet
+from Todo.views import TodoViewSet, CheckListItemViewSet
+
+# to handle check list items nested urls
+from rest_framework_nested.routers import NestedDefaultRouter
 
 router = DefaultRouter()
 router.register(r'todos', TodoViewSet, basename='todo')
 
+# router.register(r'checklist-items', CheckListItemViewSet, basename='checklistitem')
+
+todos_router= NestedDefaultRouter(router, r'todos', lookup='todo')
+todos_router.register(r'checklist-items', CheckListItemViewSet, basename='todo-checklistitem')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/', include(todos_router.urls)),
 ]

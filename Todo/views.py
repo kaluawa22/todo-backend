@@ -11,6 +11,18 @@ class TodoViewSet(viewsets.ModelViewSet):
 
 
 
+# class CheckListItemViewSet(viewsets.ModelViewSet):
+#     queryset = CheckListItem.objects.all()
+#     serializer_class = CheckListItemSerializer
+
+
+
 class CheckListItemViewSet(viewsets.ModelViewSet):
-    queryset = CheckListItem.objects.all()
     serializer_class = CheckListItemSerializer
+
+    def get_queryset(self):
+        # Get the `todo_id` from the URL
+        todo_id = self.kwargs['todo_pk']
+        
+        # Filter the checklist items by the `todo_id`
+        return CheckListItem.objects.filter(todo_id=todo_id)
