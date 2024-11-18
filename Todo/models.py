@@ -2,6 +2,14 @@ from django.db import models
 
 # Create your models here.
 
+class Label(models.Model):
+    # label title name
+    title = models.CharField(max_length=50, unique=True)
+
+    # returns label title which is used as model identifier 
+
+    def __str__(self):
+        return self.title
 
 
 # Todo Model
@@ -15,6 +23,9 @@ class Todo(models.Model):
     completed = models.BooleanField(default=False)
     # Todo item created at 
     created_at = models.DateField(auto_now_add=True)
+
+    # label forign key 
+    labels = models.ManyToManyField('Label', related_name='todos', blank=True)
 
     # returns title which is used as model identifier 
     def __str__(self):
