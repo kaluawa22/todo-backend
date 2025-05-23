@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 from Todo.views import TodoViewSet, CheckListItemViewSet, LabelViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 # to handle check list items nested urls
 from rest_framework_nested.routers import NestedDefaultRouter
@@ -32,7 +33,10 @@ todos_router.register(r'checklist-items', CheckListItemViewSet, basename='todo-c
 todos_router.register(r'labels', LabelViewSet, basename='todo-labels')
 
 urlpatterns = [
+    
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/', include(todos_router.urls)),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
