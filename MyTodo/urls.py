@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
-from Todo.views import TodoViewSet, CheckListItemViewSet, LabelViewSet
+from Todo.views import TodoViewSet, CheckListItemViewSet, LabelViewSet, RegisterView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 # to handle check list items nested urls
@@ -39,4 +39,5 @@ urlpatterns = [
     path('api/', include(todos_router.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/register/', RegisterView.as_view(), name='register'),
 ]
