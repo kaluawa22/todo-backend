@@ -24,7 +24,7 @@ class Todo(models.Model):
     # Todo item created at 
     created_at = models.DateField(auto_now_add=True)
 
-    # label forign key 
+    
     labels = models.ManyToManyField('Label', related_name='todos', blank=True)
 
     # returns title which is used as model identifier 

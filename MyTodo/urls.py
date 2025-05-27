@@ -35,9 +35,14 @@ todos_router.register(r'labels', LabelViewSet, basename='todo-labels')
 urlpatterns = [
     
     path('admin/', admin.site.urls),
+    # Main API endpoint for todos and labels
     path('api/', include(router.urls)),
+    # Nested URLs for checklist items under todos
     path('api/', include(todos_router.urls)),
+    # Endpoint for obtaining JWT tokens
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # Endpoint for refreshing JWT tokens
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # Register endpoint for user registration
     path('api/register/', RegisterView.as_view(), name='register'),
 ]
