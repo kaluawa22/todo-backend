@@ -52,14 +52,29 @@ class LabelSerializer(serializers.ModelSerializer):
 class TodoSerializer(serializers.ModelSerializer):
     checklist_items = CheckListItemSerializer(many=True, read_only=True)
     
-    labels = LabelSerializer(many=True, required=False, read_only=True)
-
+    # labels = LabelSerializer(many=True, required=False, read_only=True)
+    
+    # allow labels to be set via primary key 
+    labels = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Label.objects.all(),
+        required=False,
+        allow_null=True
+    )
      # Make description optional
     description = serializers.CharField(required=False, allow_blank=True)
 
+    # due date field
+    due_date = serializers.DateField(
+        format='%Y-%m-%d',
+        input_formats=['%Y-%m-%d'],
+        required=False,
+        allow_null=True
+    )
+
     class Meta:
         model = Todo
-        fields = ['id', 'title', 'description', 'completed', 'created_at', 'checklist_items', 'labels']
+        fields = ['id', 'title', 'description', 'completed', 'created_at', 'due_date', 'checklist_items', 'labels']
         read_only_fields = ['id', 'created_at']
 
 

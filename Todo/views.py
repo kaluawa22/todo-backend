@@ -23,8 +23,18 @@ from rest_framework import status
 # Create your views here.
 class TodoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = Todo.objects.all()
     serializer_class = TodoSerializer
+    # queryset = Todo.objects.all()
+
+    def get_queryset(self):
+        # Only return todos for the authenticated user
+        return Todo.objects.filter(created_by=self.request.user)
+
+
+    # Automatically set the 'created_by' field to the currently authenticated user
+    # when a new Todo is created via the API.
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
 
 
 class RegisterView(generics.CreateAPIView):
