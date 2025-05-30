@@ -1,26 +1,45 @@
 from django.shortcuts import render
+from rest_framework import generics
+from django.contrib.auth.models import User
 
-# Create your views here.
+
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import Todo,CheckListItem,Label
-from .serializers import TodoSerializer,CheckListItemSerializer, LabelSerializer
+from .serializers import TodoSerializer,CheckListItemSerializer, LabelSerializer, UserSerializer
 
 from rest_framework.response import Response
 from rest_framework import status
 
 
+
+
+
+
+
+
+# Create your views here.
 class TodoViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = Todo.objects.all()
     serializer_class = TodoSerializer
+    # queryset = Todo.objects.all()
+
+    def get_queryset(self):
+        # Only return todos for the authenticated user
+        return Todo.objects.filter(created_by=self.request.user)
 
 
+    # Automatically set the 'created_by' field to the currently authenticated user
+    # when a new Todo is created via the API.
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
 
 
-
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class CheckListItemViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

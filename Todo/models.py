@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -24,8 +25,14 @@ class Todo(models.Model):
     # Todo item created at 
     created_at = models.DateField(auto_now_add=True)
 
-    # label forign key 
+    # todo item due date 
+    due_date = models.DateField(null=True, blank=True)
+
+    
     labels = models.ManyToManyField('Label', related_name='todos', blank=True)
+   
+   # Link specific Todo to User
+    created_by = models.ForeignKey(User, related_name='todos', on_delete=models.CASCADE)
 
     # returns title which is used as model identifier 
     def __str__(self):
