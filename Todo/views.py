@@ -63,19 +63,14 @@ class LabelViewSet(viewsets.ModelViewSet):
     serializer_class = LabelSerializer
     queryset = Label.objects.all()
 
-    # Default method for creating a new label
-
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
     
-    # Custom action for associating an existing label with a todo
-
     @action(detail=True, methods=['post'], url_path='associate', url_name='associate')
     def associate_label_with_todo(self, request, pk=None):
         todo_id = pk  # The `todo_id` from the URL
         label_id = request.data.get("label_id")  # Extract label ID from the payload
 
-        # Validate and fetch the instances
         try:
             todo = Todo.objects.get(id=todo_id)
             label = Label.objects.get(id=label_id)
@@ -84,16 +79,18 @@ class LabelViewSet(viewsets.ModelViewSet):
         except Label.DoesNotExist:
             return Response({"error": "Label not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        # Associate the label with the todo
         todo.labels.add(label)
         return Response({"message": "Label associated with Todo"}, status=status.HTTP_200_OK)
 
-
+    @action(detail=True, methods=['get'], url_path='todos')
+    def todos(self, request, pk=None):
+        label = self.get_object()
+        todos = label.todos.all()
+        serializer = TodoSerializer(todos, many=True)
+        return Response(serializer.data)
 
     def get_queryset(self):
-        todo_id = self.kwargs.get('todo_pk')  # Retrieve `todo_id` from the URL kwargs
+        todo_id = self.kwargs.get('todo_pk')
         if todo_id:
-            # Filter labels associated with the specified `todo_id`
             return Label.objects.filter(todos__id=todo_id)
-        # If no `todo_id` is provided, return all labels
         return Label.objects.all()

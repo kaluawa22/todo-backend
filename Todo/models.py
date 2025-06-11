@@ -6,9 +6,12 @@ from django.contrib.auth.models import User
 class Label(models.Model):
     # label title name
     title = models.CharField(max_length=50, unique=True)
-
+    
+    # Link to User who created the label
+    created_by = models.ForeignKey(User, related_name='labels', on_delete=models.CASCADE)
+    
+    
     # returns label title which is used as model identifier 
-
     def __str__(self):
         return self.title
 
