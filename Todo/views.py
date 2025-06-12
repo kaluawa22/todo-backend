@@ -67,10 +67,9 @@ class LabelViewSet(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
     
     @action(detail=True, methods=['post'], url_path='associate', url_name='associate')
-    def associate_label_with_todo(self, request, pk=None):
-        todo_id = pk  # The `todo_id` from the URL
-        label_id = request.data.get("label_id")  # Extract label ID from the payload
-
+    def associate_label_with_todo(self, request, todo_pk=None, pk=None):
+        todo_id = todo_pk  # The parent lookup from the nested router
+        label_id = pk      # The label's ID from the URL
         try:
             todo = Todo.objects.get(id=todo_id)
             label = Label.objects.get(id=label_id)
